@@ -1,0 +1,10 @@
+---
+  name: "slack"
+  type: "neuron"
+  author: "https://github.com/royto/"
+
+  kalliope_supported_version:
+    - 0.4
+
+  tags:
+    - "slack"

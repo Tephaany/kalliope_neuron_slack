@@ -2,32 +2,47 @@
 
 ## Synopsis
 
-This neuron allows you to send a message to slack (channel or IM).
+This neuron allows you to 
+- POST a message to slack (channel or IM).
+- READ a number of messages from a channel.
 
 ## Installation
 ```bash
 kalliope install --git-url https://github.com/kalliope-project/kalliope_neuron_slack.git
 ```
 
-## Options
+## Specification
 
-| parameter           | required | default | choices | comment                     |
-|---------------------|----------|---------|---------|-----------------------------|
-| slack_token         | yes      | None    |         | Team User token             |
-| slack_channel       | yes      | None    |         | Slack channel or user       |
-| message             | yes      | None    |         | the message to send         |
-## Return Values
+The Slack Neuron has multiple available actions : POST, READ
+Each of them requires specific options, return values and synapses example : 
 
-| Name    | Description                       | Type   | sample          |
-|---------|-----------------------------------|--------|-----------------|
-| message | The message which has been posted | string | coucou kalliopé |
+#### POST 
+##### Options
 
-## Synapses example
 
-```
+| parameter   | required | type   | default | choices    | comment                              |
+|-------------|----------|--------|---------|------------|--------------------------------------|
+| action      | YES      | String | None    | POST, READ | Defines the action type              |
+| slack_token | YES      | String | None    |            | The slack token                      |
+| message     | YES      | String | None    |            | The text to post                     |
+| channel     | YES      | String | None    |            | The channel name to post the message |
+
+
+##### Return Values
+
+| Name    | Description                                | Type   | sample      |
+|---------|--------------------------------------------|--------|-------------|
+| action  | the action USED                            | String | POST        |
+| message | The text posted on Slack                   | String | Hi Kalliope |
+| channel | The channel where the text has been posted | String | General     |
+
+##### Synapses example
+
+``` yml
 - name: "post-slack"
   neurons:
     - slack:
+        action: "POST"
         slack_token: "MY_SECRET_TOKEN"
         slack_channel: "#general"
         args:
@@ -35,6 +50,44 @@ kalliope install --git-url https://github.com/kalliope-project/kalliope_neuron_s
   signals:
     - order: "post on slack {{ message }}"
 ```
+
+
+#### READ
+##### Options
+
+
+| parameter   | required | type   | default | choices    | comment                              |
+|-------------|----------|--------|---------|------------|--------------------------------------|
+| action      | YES      | String | None    | POST, READ | Defines the action type              |
+| slack_token | YES      | String | None    |            | The slack token                      |
+| nb_messages | YES      | int    | 10      |            | number of messages to read           |
+| channel     | YES      | String | None    |            | The channel name to post the message |
+
+
+##### Return Values
+
+| Name     | Description                                | Type   | sample                                                                    |
+|----------|--------------------------------------------|--------|---------------------------------------------------------------------------|
+| action   | the action USED                            | String | POST                                                                      |
+| messages | The list of dict username:message          | List   | ({"monf":"Hi There!"}, {"Kalliope":"Hi @monf"}, {"monf":"How are you ?"}) |
+| channel  | The channel where the text has been read   | String | General                                                                   |
+
+##### Synapses example
+
+``` yml
+- name: "read-slack"
+  neurons:
+    - slack:
+        action: READ
+        slack_token: "MY_SECRET_TOKEN"
+        nb_messages: 3
+        args:
+          - slack_channel
+  signals:
+    - order: "Read Slack messages from {{ slack_channel }}"
+```
+
+##### 
 
 ## Notes
 
@@ -48,6 +101,8 @@ In order to be able to post on Slack, you need to get a slack token (currently o
 7. Post your first message with this neuron !
 
 ### Send a IM message
+/!\ __TODO__ automatise this step 
+
 You need to get the IM channel's ID.
 
  1. Go to [Slack user api test page](https://api.slack.com/methods/users.list/test) 

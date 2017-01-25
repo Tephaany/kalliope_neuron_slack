@@ -6,7 +6,11 @@
   become: true
 
   tasks:
-    - name: "Install pip dependencies"
+    - name: "Install pip slackclient dependencies"
       pip:
         name: slackclient
         version: 1.0.4
+    - name: "Install pip requests dependencies"
+      pip:
+        name: requests
+        version: 2.12.4

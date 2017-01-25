@@ -13,7 +13,8 @@ kalliope install --git-url https://github.com/kalliope-project/kalliope_neuron_s
 
 ## Specification
 
-The Slack Neuron has multiple available actions : POST, READ
+The Slack Neuron has multiple available actions : POST, READ.
+
 Each of them requires specific options, return values and synapses example : 
 
 #### POST 
@@ -60,7 +61,7 @@ Each of them requires specific options, return values and synapses example :
 |-------------|----------|--------|---------|------------|--------------------------------------|
 | action      | YES      | String | None    | POST, READ | Defines the action type              |
 | slack_token | YES      | String | None    |            | The slack token                      |
-| nb_messages | YES      | int    | 10      |            | number of messages to read           |
+| nb_messages | No       | int    | 10      |            | number of messages to read           |
 | channel     | YES      | String | None    |            | The channel name to post the message |
 
 

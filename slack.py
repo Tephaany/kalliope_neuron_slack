@@ -92,7 +92,7 @@ class Slack(NeuronModule):
         .. raises:: MissingParameterException
         """
         if self.channel is None:
-            raise MissingParameterException("Slack needs a slack_channel")
+            raise MissingParameterException("Slack needs a channel")
         if self.message is None:
             raise MissingParameterException("Slack needs a message")
         
@@ -106,7 +106,7 @@ class Slack(NeuronModule):
         .. raises:: MissingParameterException
         """
         if self.channel is None:
-            raise MissingParameterException("Slack needs a slack_channel")
+            raise MissingParameterException("Slack needs a channel")
 
         return True
 

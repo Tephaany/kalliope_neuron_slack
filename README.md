@@ -45,7 +45,7 @@ Each of them requires specific options, return values and synapses example :
     - slack:
         action: "POST"
         slack_token: "MY_SECRET_TOKEN"
-        slack_channel: "#general"
+        channel: "#general"
         args:
           - message
   signals:
@@ -69,7 +69,7 @@ Each of them requires specific options, return values and synapses example :
 
 | Name     | Description                                | Type   | sample                                                                    |
 |----------|--------------------------------------------|--------|---------------------------------------------------------------------------|
-| action   | the action USED                            | String | POST                                                                      |
+| action   | the action USED                            | String | READ                                                                      |
 | messages | The list of dict username:message          | List   | ({"monf":"Hi There!"}, {"Kalliope":"Hi @monf"}, {"monf":"How are you ?"}) |
 | channel  | The channel where the text has been read   | String | General                                                                   |
 
@@ -83,9 +83,9 @@ Each of them requires specific options, return values and synapses example :
         slack_token: "MY_SECRET_TOKEN"
         nb_messages: 3
         args:
-          - slack_channel
+          - channel
   signals:
-    - order: "Read Slack messages from {{ slack_channel }}"
+    - order: "Read Slack messages from {{ channel }}"
 ```
 
 ##### 

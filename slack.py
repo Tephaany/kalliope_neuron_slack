@@ -137,13 +137,9 @@ class Slack(NeuronModule):
         :param channel_list: list of the channel
         :return: the id from the channel list corresponding to the channel name.
         """
-        id = None
-        if "channels" in channel_list:
-            for channel in channel_list["channels"]:
-                if "name" in channel:
-                    if channel_name == channel["name"]:
-                        if "id" in channel:
-                            id = channel["id"]
+
+        id = next((channel["id"] for channel in channel_list["channels"] if channel["name"] == channel_name), None)
+
         if id is None:
             Utils.print_warning("The channel name has not been found !")
         return id

@@ -7,7 +7,8 @@ from kalliope.core.NeuronModule import NeuronModule, MissingParameterException
 
 Slack_Actions = (
     "POST",
-    "READ"
+    "READ",
+    "USERS"
 )
 
 
@@ -22,6 +23,7 @@ class Slack(NeuronModule):
         self.channel = kwargs.get('channel', None)
         self.message = kwargs.get('message', None)
         self.nb_messages = int(kwargs.get('nb_messages', 10))  # Int
+        self.only_connected = bool(kwargs.get('only_connected', True))
         
         # check parameters
         if self._is_parameters_ok():
@@ -67,6 +69,23 @@ class Slack(NeuronModule):
                         "action": self.action,
                         "messages": user_messages,
                         "channel": self.channel
+                    }
+            
+            if self.action == Slack_Actions[2]:  # USERS
+                user_list = sc.api_call(
+                    "users.list",
+                    presence=1
+                )
+
+                members = user_list["members"]
+
+                if self.only_connected:
+                    members = filter(lambda m: "presence" in m and m["presence"] == "active", members)
+
+                message = {
+                        "action": self.action,
+                        "members": members,
+                        "only_connected": self.only_connected
                     }
 
             self.say(message)

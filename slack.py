@@ -1,5 +1,4 @@
 import requests
-import json
 
 from slackclient import SlackClient
 
@@ -55,7 +54,7 @@ class Slack(NeuronModule):
                                                       channel_list=channel_list)
 
                     # Get all messages of the channel
-                    messages_list = self._get_list_messages(token=self.token,
+                    messages_list = self._get_list_messages(sc=sc,
                                                             channel_id=channel_id,
                                                             nb_messages=self.nb_messages)
 
@@ -111,37 +110,23 @@ class Slack(NeuronModule):
         return True
 
     @staticmethod
-    def _get_list_messages(token=None,
+    def _get_list_messages(sc=None,
                            channel_id=None,
                            nb_messages=None):
         """
         Using Slack API to access messages from a given channel id.
-        :param token: the API token
+        :param sc: the slack client
         :param channel_id: the channel id
         :param nb_messages: the number of messages
         :return: the message list of the last nb_messages
         """
-        message_list = list()
-
-        data = {
-            "token": token,
-            "channel": channel_id
-        }
-
-        r = requests.post("https://slack.com/api/channels.history",
-                          data=data)
-
-        if r.status_code == 200:
-            json_data = json.loads(r.text)
-            if "messages" in json_data:
-                count = 0
-                for message in json_data["messages"]:
-                    if count < nb_messages:
-                        message_list.append(message)
-                        count += 1
-                    else: break
-
-        return message_list
+        message_list = sc.api_call(
+                        "channels.history",
+                        channel=channel_id,
+                        count=nb_messages
+                    )
+        
+        return message_list["messages"]
 
     @staticmethod
     def _get_channel_id(channel_name=None,

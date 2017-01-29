@@ -64,37 +64,37 @@ class TestSlack(unittest.TestCase):
         """
         Testing the _get_list_messages method
         """
-        token = "testtoken"
         channel_id = "testchannelid"
         nb_messages = 3
 
         mocked_text = {
             "messages": [
                 {"username": "Kalliope", "text": "hi"},
-                      {"name": "MONF42", "text": "hi K"},
-                      {"username": "Kalliope", "text": "how are you?"},
-                      {"name": "MONF42", "text": "fine"},
-                      {"username": "Kalliope", "text": "good"}
+                {"name": "MONF42", "text": "hi K"},
+                {"username": "Kalliope", "text": "how are you?"}
             ]
         }
-        # Encode
-        mocked_text = json.dumps(mocked_text, separators=(',', ':'))
-
+        
         expected_result = [
             {"username": "Kalliope", "text": "hi"},
             {"name": "MONF42", "text": "hi K"},
             {"username": "Kalliope", "text": "how are you?"}
         ]
 
-        with mock.patch("requests.post") as mock_requests_post:
-            mock_requests_post.return_value = mock.Mock(status_code=200,
-                                                        text=mocked_text)
+        # Mock the slackclient
+        with mock.patch("slackclient.__init__") as mock_slackclient:
+            mock_slackclient.return_value = mock.Mock()
+            mock_slackclient.api_call.return_value = mocked_text
 
-            self.assertEqual(Slack._get_list_messages(token=token,
+            self.assertEqual(Slack._get_list_messages(sc=mock_slackclient,
                                                       channel_id=channel_id,
                                                       nb_messages=nb_messages),
                              expected_result,
-                             "Fail to get the proper number of messages")
+                             "Fail to get list of messages")
+            
+            mock_slackclient.api_call.assert_called_with("channels.history",
+                        channel=channel_id,
+                        count=nb_messages)
 
     def test_get_channel_id(self):
         """

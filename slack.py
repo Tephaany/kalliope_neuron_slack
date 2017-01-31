@@ -1,5 +1,4 @@
 import requests
-import json
 
 from slackclient import SlackClient
 
@@ -55,7 +54,7 @@ class Slack(NeuronModule):
                                                       channel_list=channel_list)
 
                     # Get all messages of the channel
-                    messages_list = self._get_list_messages(token=self.token,
+                    messages_list = self._get_list_messages(sc=sc,
                                                             channel_id=channel_id,
                                                             nb_messages=self.nb_messages)
 
@@ -111,37 +110,23 @@ class Slack(NeuronModule):
         return True
 
     @staticmethod
-    def _get_list_messages(token=None,
+    def _get_list_messages(sc=None,
                            channel_id=None,
                            nb_messages=None):
         """
         Using Slack API to access messages from a given channel id.
-        :param token: the API token
+        :param sc: the slack client
         :param channel_id: the channel id
         :param nb_messages: the number of messages
         :return: the message list of the last nb_messages
         """
-        message_list = list()
-
-        data = {
-            "token": token,
-            "channel": channel_id
-        }
-
-        r = requests.post("https://slack.com/api/channels.history",
-                          data=data)
-
-        if r.status_code == 200:
-            json_data = json.loads(r.text)
-            if "messages" in json_data:
-                count = 0
-                for message in json_data["messages"]:
-                    if count < nb_messages:
-                        message_list.append(message)
-                        count += 1
-                    else: break
-
-        return message_list
+        message_list = sc.api_call(
+                        "channels.history",
+                        channel=channel_id,
+                        count=nb_messages
+                    )
+        
+        return message_list["messages"]
 
     @staticmethod
     def _get_channel_id(channel_name=None,
@@ -152,13 +137,9 @@ class Slack(NeuronModule):
         :param channel_list: list of the channel
         :return: the id from the channel list corresponding to the channel name.
         """
-        id = None
-        if "channels" in channel_list:
-            for channel in channel_list["channels"]:
-                if "name" in channel:
-                    if channel_name == channel["name"]:
-                        if "id" in channel:
-                            id = channel["id"]
+
+        id = next((channel["id"] for channel in channel_list["channels"] if channel["name"] == channel_name), None)
+
         if id is None:
             Utils.print_warning("The channel name has not been found !")
         return id

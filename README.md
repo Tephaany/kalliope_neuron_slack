@@ -89,18 +89,21 @@ Each of them requires specific options, return values and synapses example :
 ```
 
 An example using the Jinja2 templates files:
-```
-- slack:
-  slack_token: "MY_SECRET_SLACK_TOKEN"
-  action: "READ"
-  nb_messages: 3
-  channel: "general"
-  file_template: neurons/slack/slack_template.j2
-
+``` yml
+- name: "read-slack"
+  neurons:
+    - slack:
+      slack_token: "MY_SECRET_SLACK_TOKEN"
+      action: "READ"
+      nb_messages: 3
+      channel: "general"
+      file_template: neurons/slack/slack_template.j2
+ signals:
+    - order: "Read Slack messages"
 ```
 
 The template defined in the slack_template.j2
-```
+```jinja2
 {% for message in messages %}
     {% for key, value in message.iteritems() %}
         {{ key }} said {{ value }}

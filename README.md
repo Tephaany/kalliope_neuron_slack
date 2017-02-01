@@ -88,6 +88,27 @@ Each of them requires specific options, return values and synapses example :
     - order: "Read Slack messages from {{ channel }}"
 ```
 
+An example using the Jinja2 templates files:
+```
+- slack:
+  slack_token: "MY_SECRET_SLACK_TOKEN"
+  action: "READ"
+  nb_messages: 3
+  channel: "general"
+  file_template: neurons/slack/slack_template.j2
+
+```
+
+The template defined in the slack_template.j2
+```
+{% for message in messages %}
+    {% for key, value in message.iteritems() %}
+        {{ key }} said {{ value }}
+    {% endfor %}
+{% endfor %}
+
+```
+
 ##### 
 
 ## Notes

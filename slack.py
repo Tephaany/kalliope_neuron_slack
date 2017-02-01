@@ -57,7 +57,8 @@ class Slack(NeuronModule):
                     messages_list = self._get_list_messages(sc=sc,
                                                             channel_id=channel_id,
                                                             nb_messages=self.nb_messages)
-
+                    # Order the messages
+                    messages_list.reverse()
                     # Associate user ID of messages to the user name
                     user_messages = self._get_user_message_list(user_list=user_list,
                                                                 messages=messages_list)
@@ -120,13 +121,17 @@ class Slack(NeuronModule):
         :param nb_messages: the number of messages
         :return: the message list of the last nb_messages
         """
-        message_list = sc.api_call(
+        global_message_list = sc.api_call(
                         "channels.history",
                         channel=channel_id,
                         count=nb_messages
                     )
-        
-        return message_list["messages"]
+        message_list = list()
+        if "messages" in global_message_list:
+            message_list = global_message_list["messages"]
+        else:
+            Utils.print_warning("No messages found !")
+        return message_list
 
     @staticmethod
     def _get_channel_id(channel_name=None,

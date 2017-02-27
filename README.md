@@ -5,6 +5,7 @@
 This neuron allows you to 
 - POST a message to slack (channel or IM).
 - READ a number of messages from a channel.
+- list USERS of a slack's team 
 
 ## Installation
 ```bash
@@ -13,7 +14,7 @@ kalliope install --git-url https://github.com/kalliope-project/kalliope_neuron_s
 
 ## Specification
 
-The Slack Neuron has multiple available actions : POST, READ.
+The Slack Neuron has multiple available actions : POST, READ, USERS.
 
 Each of them requires specific options, return values and synapses example : 
 
@@ -110,6 +111,48 @@ The template defined in the slack_template.j2
     {% endfor %}
 {% endfor %}
 
+```
+
+#### USERS
+##### Options
+
+| parameter      | required | type   | default | choices           | comment                              |
+|----------------|----------|--------|---------|-------------------|--------------------------------------|
+| action         | YES      | String | None    | POST, READ, USERS | Defines the action type              |
+| only_connected | NO       | bool   | TRUE    |                   | Only connected users                 |
+
+
+##### Return Values
+
+| Name           | Description                                           | Type   | sample                   |
+|----------------|-------------------------------------------------------|--------|--------------------------|
+| action         | the action USED                                       | String | USERS                    |
+| members        | The list of [users](https://api.slack.com/types/user) | List   |                          |
+| only_connected | the value of only_connected parameters                | bool   | True                     |
+
+##### Synapses example
+
+``` yml
+- name: "users-slack"
+  neurons:
+    - slack:
+        action: USERS
+        slack_token: "MY_SECRET_TOKEN"
+        file_template: neurons/slack/slack_user_template.j2
+  signals:
+    - order: "List connected users to Slack"
+```
+
+The template defined in the slack_user_template.j2
+``` yml
+{% if members|length == 0 %}
+    No users connected
+{% else %}
+    {{ members|length }} members connected.
+    {% for member in members %}
+        {{ member.name }}
+    {% endfor %}
+{% endif %}
 ```
 
 ##### 

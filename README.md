@@ -22,12 +22,12 @@ Each of them requires specific options, return values and synapses example :
 ##### Options
 
 
-| parameter   | required | type   | default | choices    | comment                              |
-|-------------|----------|--------|---------|------------|--------------------------------------|
-| action      | YES      | String | None    | POST, READ | Defines the action type              |
-| slack_token | YES      | String | None    |            | The slack token                      |
-| message     | YES      | String | None    |            | The text to post                     |
-| channel     | YES      | String | None    |            | The channel name to post the message |
+| parameter   | required | type   | default | choices           | comment                              |
+|-------------|----------|--------|---------|-------------------|--------------------------------------|
+| action      | YES      | String | None    | POST, READ, USERS | Defines the action type              |
+| slack_token | YES      | String | None    |                   | The slack token                      |
+| message     | YES      | String | None    |                   | The text to post                     |
+| channel     | YES      | String | None    |                   | The channel name to post the message |
 
 
 ##### Return Values
@@ -58,12 +58,12 @@ Each of them requires specific options, return values and synapses example :
 ##### Options
 
 
-| parameter   | required | type   | default | choices    | comment                              |
-|-------------|----------|--------|---------|------------|--------------------------------------|
-| action      | YES      | String | None    | POST, READ | Defines the action type              |
-| slack_token | YES      | String | None    |            | The slack token                      |
-| nb_messages | No       | int    | 10      |            | number of messages to read           |
-| channel     | YES      | String | None    |            | The channel name to post the message |
+| parameter   | required | type   | default | choices           | comment                              |
+|-------------|----------|--------|---------|-------------------|--------------------------------------|
+| action      | YES      | String | None    | POST, READ, USERS | Defines the action type              |
+| slack_token | YES      | String | None    |                   | The slack token                      |
+| nb_messages | No       | int    | 10      |                   | number of messages to read           |
+| channel     | YES      | String | None    |                   | The channel name to post the message |
 
 
 ##### Return Values

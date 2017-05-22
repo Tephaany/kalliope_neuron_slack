@@ -47,8 +47,7 @@ Each of them requires specific options, return values and synapses example :
         action: "POST"
         slack_token: "MY_SECRET_TOKEN"
         channel: "#general"
-        args:
-          - message
+        message: "{{ message }}"
   signals:
     - order: "post on slack {{ message }}"
 ```
@@ -83,8 +82,7 @@ Each of them requires specific options, return values and synapses example :
         action: READ
         slack_token: "MY_SECRET_TOKEN"
         nb_messages: 3
-        args:
-          - channel
+        channel: "{{ channel }}"
   signals:
     - order: "Read Slack messages from {{ channel }}"
 ```
